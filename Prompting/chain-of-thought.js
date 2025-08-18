@@ -73,40 +73,40 @@ async function chain_of_thought() {
 
     const content = response.choices[0].message.content;
     const parsedContent = JSON.parse(content);
+
+    messages.push({
+      role: "assistant",
+      content: JSON.stringify(parsedContent),
+    });
+
     // console.log(parsedContent);
     if (parsedContent.step == "START") {
       console.log(`start-->>`, parsedContent.content);
-      messages.push({
-        role: "assistant",
-        content: JSON.stringify(parsedContent),
-      });
+     
       continue;
     }
 
     if (parsedContent.step == "THINK") {
       console.log(`think-->`, parsedContent.content);
-      messages.push({
-        role: "assistant",
-        content: JSON.stringify(parsedContent),
-      });
+     
       continue;
     }
     if (parsedContent.step == "EVALUATE") {
-      messages.push({
-        role: "assistant",
-        content: JSON.stringify(parsedContent),
-      });
+
+      // messages.push({
+      //   role: "assistant",
+      //   content: JSON.stringify(parsedContent),
+      // });
       console.log(`evaluate-->`, parsedContent.content);
-      // Wait for manual evaluation
-      // For now, we will just continue to the next step
+      
       continue;
     }
 
     if (parsedContent.step == "OUTPUT") {
-      messages.push({
-        role: "assistant",
-        content: JSON.stringify(parsedContent),
-      });
+      // messages.push({
+      //   role: "assistant",
+      //   content: JSON.stringify(parsedContent),
+      // });
       console.log(`output-->`, parsedContent.content);
       break;
     }
