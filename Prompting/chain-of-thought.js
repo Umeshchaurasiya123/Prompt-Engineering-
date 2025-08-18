@@ -9,6 +9,11 @@ const client = new OpenAI({
   baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
+const entropicClient = new OpenAI({
+  apiKey: process.env.ToGetherAiApiKey,
+  baseURL: "https://api.together.xyz/v1",
+});
+
 async function chain_of_thought() {
   const SYSTEM_PROMPT = `
     You are an AI assistant who works on START, THINK and OUTPUT format.
@@ -40,15 +45,15 @@ async function chain_of_thought() {
     ASSISTANT: { "step": "THINK", "content": "Great, now the equation looks like 3 + 40 - 4 * 3" }
     ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
     ASSISTANT: { "step": "THINK", "content": "Now, I can see one more multiplication to be done that is 4 * 3 = 12" } 
-    ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
+    ASSISTANT: { "step": "EVALUATE", "content": "Alright, seems good for now " } 
     ASSISTANT: { "step": "THINK", "content": "Great, now the equation looks like 3 + 40 - 12" } 
     ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
     ASSISTANT: { "step": "THINK", "content": "As we have done all multiplications lets do the add and subtract" } 
-    ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
+    ASSISTANT: { "step": "EVALUATE", "content": "Alright, let me check the whole calculation again " } 
     ASSISTANT: { "step": "THINK", "content": "so, 3 + 40 = 43" } 
     ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
     ASSISTANT: { "step": "THINK", "content": "new equations look like 43 - 12 which is 31" } 
-    ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
+    ASSISTANT: { "step": "EVALUATE", "content": "let me compute the whole things with my self and evaluate eveything is correct or not" } 
     ASSISTANT: { "step": "THINK", "content": "great, all steps are done and final result is 31" }
     ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" }  
     ASSISTANT: { "step": "OUTPUT", "content": "3 + 4 * 10 - 4 * 3 = 31" } 
@@ -82,25 +87,33 @@ async function chain_of_thought() {
     // console.log(parsedContent);
     if (parsedContent.step == "START") {
       console.log(`start-->>`, parsedContent.content);
-     
+
       continue;
     }
 
     if (parsedContent.step == "THINK") {
       console.log(`think-->`, parsedContent.content);
-     
-      continue;
-    }
-    if (parsedContent.step == "EVALUATE") {
 
-      // messages.push({
-      //   role: "assistant",
-      //   content: JSON.stringify(parsedContent),
-      // });
-      console.log(`evaluate-->`, parsedContent.content);
-      
+      // Evaluation
+      const judgeResponse = await entropicAsJudge(messages);
+      messages.push({
+        role: "assistant",
+        content: JSON.stringify(judgeResponse),
+      });
+      console.log(`Evaluate:`, judgeResponse);
+
       continue;
     }
+    // if (parsedContent.step == "EVALUATE") {
+
+    //   // messages.push({
+    //   //   role: "assistant",
+    //   //   content: JSON.stringify(parsedContent),
+    //   // });
+    //   console.log(`evaluate-->`, parsedContent.content);
+
+    //   continue;
+    // }
 
     if (parsedContent.step == "OUTPUT") {
       // messages.push({
@@ -114,3 +127,13 @@ async function chain_of_thought() {
 }
 
 chain_of_thought();
+
+async function entropicAsJudge(message) {
+  const response = await entropicClient.chat.completions.create({
+    // model: "claude-opus-4-1-20250805",
+    model: "meta-llama/Llama-3-8b-chat-hf",
+
+    messages: message,
+  });
+  return JSON.parse(response.choices[0].message.content);
+}
