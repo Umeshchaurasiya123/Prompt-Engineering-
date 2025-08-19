@@ -1,0 +1,22 @@
+self-consistency Prompting 
+
+The model generates multiple resoponses.
+
+And select the most consistent or common anser. 
+
+Query given to two model. 
+
+one is gpt-4 and another one is Gemini. 
+
+both prodcues there own responces  
+
+now feed this both responces to new LLM gpt-5 and ask him to select the best one or the combination of boths. 
+
+-------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
