@@ -5,8 +5,8 @@ dotenv.config({
 
 import OpenAI from "openai";
 const client = new OpenAI({
-  apiKey: process.env.APIKEYGEMMINI,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+  apiKey: process.env.APIkeyVenonOrg,
+  // baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
 const entropicClient = new OpenAI({
@@ -15,7 +15,7 @@ const entropicClient = new OpenAI({
 });
 
 async function chain_of_thought() {
-  const SYSTEM_PROMPT = `
+  const SYSTEM_PROMPT = ` 
     You are an AI assistant who works on START, THINK and OUTPUT format.
     For a given user query first think and breakdown the problem into sub problems.
     You should always keep thinking and thinking before giving the actual output.
@@ -64,27 +64,29 @@ async function chain_of_thought() {
       role: "system",
       content: SYSTEM_PROMPT,
     },
-    { role: "user", content: "Hey can you solve 4*12-12+12*1/3+4" },
+    { role: "user", content: "Hey can you solve -3+1+4*12-12+12*1/3+4*123.5" },
   ];
 
   // Start the chain of thought process
 
   while (true) {
     const response = await client.chat.completions.create({
-      model: "gemini-2.0-flash",
+      model: "gpt-5-mini",
       messages: messages,
       response_format: { type: "json_object" },
     });
-
+    //Raw content is in string
     const content = response.choices[0].message.content;
+
+    //console.log(`Raw response:`, content);
     const parsedContent = JSON.parse(content);
+    console.log(`Parsed response:`, parsedContent);
 
     messages.push({
       role: "assistant",
       content: JSON.stringify(parsedContent),
     });
 
-    // console.log(parsedContent);
     if (parsedContent.step == "START") {
       console.log(`start-->>`, parsedContent.content);
 
@@ -94,32 +96,23 @@ async function chain_of_thought() {
     if (parsedContent.step == "THINK") {
       console.log(`think-->`, parsedContent.content);
 
-      // Evaluation
-      const judgeResponse = await entropicAsJudge(messages);
+      continue;
+    }
+    if (parsedContent.step == "EVALUATE") {
       messages.push({
         role: "assistant",
-        content: JSON.stringify(judgeResponse),
+        content: JSON.stringify(parsedContent),
       });
-      console.log(`Evaluate:`, judgeResponse);
+      console.log(`evaluate-->`, parsedContent.content);
 
       continue;
     }
-    // if (parsedContent.step == "EVALUATE") {
-
-    //   // messages.push({
-    //   //   role: "assistant",
-    //   //   content: JSON.stringify(parsedContent),
-    //   // });
-    //   console.log(`evaluate-->`, parsedContent.content);
-
-    //   continue;
-    // }
 
     if (parsedContent.step == "OUTPUT") {
-      // messages.push({
-      //   role: "assistant",
-      //   content: JSON.stringify(parsedContent),
-      // });
+      messages.push({
+        role: "assistant",
+        content: parsedContent.content,
+      });
       console.log(`output-->`, parsedContent.content);
       break;
     }

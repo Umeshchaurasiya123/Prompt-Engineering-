@@ -5,13 +5,13 @@ dotenv.config({
 
 import OpenAI from "openai";
 const client = new OpenAI({
-  apiKey: process.env.APIKEYGEMMINI,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+   apiKey: process.env.APIkeyVenonOrg
+  // baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
 async function zeroShortPrompting() {
   const response = await client.chat.completions.create({
-    model: "gemini-2.0-flash",
+    model: "gpt-5-mini",
     messages: [
       {
         role: "system",

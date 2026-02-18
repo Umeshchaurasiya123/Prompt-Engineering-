@@ -1,17 +1,18 @@
 import dotenv from "dotenv";
 dotenv.config({
-    path: "../.env" // Adjust path as needed
+  path: "../.env", // Adjust path as needed
 });
 
 import OpenAI from "openai";
+
 const client = new OpenAI({
-  apiKey: process.env.APIKEYGEMMINI,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+  apiKey: process.env.APIkeyVenonOrg,
+  // baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
 async function zeroShortPrompting() {
   const response = await client.chat.completions.create({
-    model: "gemini-2.0-flash",
+    model: "gpt-5-mini",
     messages: [
       {
         role: "system",
@@ -32,15 +33,33 @@ async function zeroShortPrompting() {
       },
       {
         role: "user",
-        content: "telle me about panmasala and its benefits also gutka ",
+        content: "tell me about panmasala and its benefits also gutka ",
       },
     ],
   });
 
   console.log(response.choices[0].message.content);
-
+  console.log(`Raw response:`, response.choices[0].message);
+  console.log(`Response object:`, response);  
 }
-
+  
 zeroShortPrompting();
 
+/*
+import OpenAI from "openai";
 
+const openai = new OpenAI({
+  
+  apiKey: process.env.APIkeyVenonOrg,
+});
+
+const response = openai.responses.create({
+  model: "gpt-5-nano",
+  input: "write a poem in hindi on nature and its beauty in 400 lines",
+  store: true,
+});
+
+response.then((result) => console.log(result.output_text));
+
+
+*/
