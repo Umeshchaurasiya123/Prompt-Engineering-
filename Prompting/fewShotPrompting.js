@@ -9,7 +9,7 @@ const client = new OpenAI({
   // baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
-async function zeroShortPrompting() {
+async function fewShotPrompting() {
   const response = await client.chat.completions.create({
     model: "gpt-5-mini",
     messages: [
@@ -76,4 +76,4 @@ async function zeroShortPrompting() {
   console.log(response.choices[0].message.content);
 }
 
-zeroShortPrompting();
+fewShotPrompting();

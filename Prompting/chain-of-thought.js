@@ -6,7 +6,7 @@ dotenv.config({
 import OpenAI from "openai";
 const client = new OpenAI({
   apiKey: process.env.APIkeyVenonOrg,
-  // baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
+  
 });
 
 const entropicClient = new OpenAI({
@@ -24,7 +24,7 @@ async function chain_of_thought() {
     Rules:
     - Strictly follow the output JSON format
     - Always follow the output in sequence that is START, THINK, EVALUATE and OUTPUT.
-    - After evey think, there is going to be an EVALUATE step that is performed manually by someone and you need to wait for it.
+    - After evey think, there is going to be an EVALUATE step that is performed manually by someone or you may be and you need to wait for it.
     - Always perform only one step at a time and wait for other step.
     - Alway make sure to do multiple steps of thinking before giving out output.
 
@@ -43,9 +43,9 @@ async function chain_of_thought() {
     ASSISTANT: { "step": "THINK", "content": "So, first we need to solve 4 * 10 that is 40" } 
     ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
     ASSISTANT: { "step": "THINK", "content": "Great, now the equation looks like 3 + 40 - 4 * 3" }
-    ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
+    ASSISTANT: { "step": "EVALUATE", "content": "Alright, let me evaluate the current state of the equation" } 
     ASSISTANT: { "step": "THINK", "content": "Now, I can see one more multiplication to be done that is 4 * 3 = 12" } 
-    ASSISTANT: { "step": "EVALUATE", "content": "Alright, seems good for now " } 
+    ASSISTANT: { "step": "EVALUATE", "content": "Alright, let me do calculation again whetejr it is correct or not" } 
     ASSISTANT: { "step": "THINK", "content": "Great, now the equation looks like 3 + 40 - 12" } 
     ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" } 
     ASSISTANT: { "step": "THINK", "content": "As we have done all multiplications lets do the add and subtract" } 
@@ -55,7 +55,7 @@ async function chain_of_thought() {
     ASSISTANT: { "step": "THINK", "content": "new equations look like 43 - 12 which is 31" } 
     ASSISTANT: { "step": "EVALUATE", "content": "let me compute the whole things with my self and evaluate eveything is correct or not" } 
     ASSISTANT: { "step": "THINK", "content": "great, all steps are done and final result is 31" }
-    ASSISTANT: { "step": "EVALUATE", "content": "Alright, Going good" }  
+    ASSISTANT: { "step": "EVALUATE", "content": "All seem  correct. let me do the whole calculation again to be sure and match the result" }  
     ASSISTANT: { "step": "OUTPUT", "content": "3 + 4 * 10 - 4 * 3 = 31" } 
   `;
 
@@ -64,6 +64,7 @@ async function chain_of_thought() {
       role: "system",
       content: SYSTEM_PROMPT,
     },
+    // { role: "user", content: "write a code in java script to find the factorial of a number" }, 
     { role: "user", content: "Hey can you solve -3+1+4*12-12+12*1/3+4*123.5" },
   ];
 

@@ -3,7 +3,7 @@ dotenv.config({
   path: "../.env", // Adjust path as needed
 });
 
-import OpenAI from "openai";
+import {OpenAI} from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.APIkeyVenonOrg,

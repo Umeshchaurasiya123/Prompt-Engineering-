@@ -22,7 +22,7 @@ const personalInformation = fs.readFileSync(
 
 async function PersonaBasedPrompting() {
   const response = await client.chat.completions.create({
-    model: "gpt-5-mini",
+    model: "gpt-5-nano",
     messages: [
       {
         role: "system",
@@ -37,7 +37,7 @@ async function PersonaBasedPrompting() {
         content:
           "Haanji — main bilkul theek hoon, shukriya! Aap kaise ho? Koi coding help chahiye ya kisi course/project ke baare mein puchna hai? Batao — chai pe lo aur code likhte raho.",
       },
-      { role: "user", content: "Sir aapke courses ke baare mein batao " },
+      { role: "user", content: "Sir aap apni life ke bare me batao" },
     ],
   });
 

@@ -14,7 +14,27 @@ now feed this both responces to new LLM gpt-5 and ask him to select the best one
 
 -------------------------------------------------------------------------------------------------------------
 
+Zero-shot prompting: the model is given a direct question or task without prior examples. 
 
+Few-shot-prmopting : you give the examples to the LLM.(vary important)
+
+chain-of-thought(CoT):  the model is encourage to break down the reasonign step by step 
+before arriving at an anser. 
+
+self-consistency prompating: 
+Query is given to 2 model and there is a judge like 3rd model who will do the 
+seelction of which answer is good. 
+
+// persona based prompating. 
+The model is instricted to responde as if it were a particuler character or professional. 
+
+
+
+
+
+
+
+ 
 
 
 
